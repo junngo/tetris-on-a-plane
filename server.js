@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var router = require('./router/index')(app);
 
 // DB CONNECT
 var db = mongoose.connection;
@@ -14,16 +13,18 @@ db.once('open', function(){
 
 mongoose.connect('mongodb://localhost/tetris');
 
-var Record = require('./models/record');
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+var Record = require('./models/record');
 
 // USING HTML/STATIC FILE
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 app.use(express.static('public'));
+
+var router = require('./router/index')(app, Record);
 
 // RUN SERVER
 var server = app.listen(3000, function(){
