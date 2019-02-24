@@ -32,12 +32,38 @@ module.exports = function(app, Record)
 
     // UPDATE THE RECORD
     app.put('/api/records/:record_id', function(req, res){
-        res.end();
+        Record.findById(req.params.record_id, function(err, record){
+            if(err)
+                return res.status(500).json({ error: 'database failure' });
+            if(!record)
+                return res.status(404).json({ error: ' record not found' })
+           
+            if(req.body.user)
+                record.user = req.body.user;
+            if(req.body.score)
+                record.score = req.body.score;
+            if(req.body.published_date) 
+                record.published_date = req.body.published_date;
+            
+            record.save(function(err){
+                if(err) 
+                    res.status(500).json({error: 'failed to update'});
+                
+                    res.json({message: 'record updated'});
+            });
+                
+        });
+
     });
 
     // DELETE RECORD
     app.delete('/api/records/:record_id', function(req, res){
-        res.end();
+        Record.remove({ _id: req.params.record_id }, function(err, output){
+            if(err)
+                return res.status(500).json({ error: "database failure" });
+
+            res.status(204).end();
+        })
     });
     
 
