@@ -1,6 +1,11 @@
 module.exports = function(app, Record)
 {
-     app.get('/',function(req,res){
+    
+    app.get('/',function(req,res){
+        res.render('index.html');
+    });
+
+     app.get('/tetris',function(req,res){
         res.render('tetris.html');
      });
 
@@ -66,8 +71,4 @@ module.exports = function(app, Record)
         })
     });
     
-
-    //  app.get('/about',function(req,res){
-    //     res.render('about.html');
-    // });
 }
